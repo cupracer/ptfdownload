@@ -77,7 +77,7 @@ Downloading to "my-ptf/":
 Downloads finished.
 To install the downloaded packages please run as root:
 
-$ rpm -Fvh my-ptf*.rpm
+$ rpm -Fvh my-ptf/*.rpm
 
 ```
 
