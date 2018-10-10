@@ -136,7 +136,10 @@ def doPtfDownload(outputdir, url, includeOptional):
                         print "\nError: " + repr(error)
                         return False
 
-        print "\nDownloads finished."
+        print ("\nDownloads finished.\n"
+			"To install the downloaded packages please run as root:\n\n"
+			"$ rpm -Fvh " + outputdir + "*.rpm\n")
+			
         return True
 
 
