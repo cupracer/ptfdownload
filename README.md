@@ -44,7 +44,9 @@ do_ptf_download(outputdir, url, username, password, includeOptional, verbose)
 
 ## Example CLI session
 ```
-# ./suse_ptfdownload.py -d my-ptf
+$ mkdir /tmp/my-ptf
+
+$ ./suse_ptfdownload.py -d my-ptf
 ######################################################
 Welcome to the Program Temporary Fix download helper!
 ######################################################
@@ -61,13 +63,13 @@ For more information on using PTFs, please visit the following support articles:
 
 Please provide necessary information:
 
-Output dir   : my-ptf/
+Output dir   : /tmp/my-ptf/
 PTF URL      : [*REMOVED*]
 SCC username : [*REMOVED*]
 SCC password :
 
 Retrieving PTF information...
-Downloading to "my-ptf/":
+Downloading to "/tmp/my-ptf/":
 
 * [SOME_RPM_1].rpm
     127291  [100.00%]
@@ -79,7 +81,7 @@ Downloading to "my-ptf/":
 Downloads finished.
 To install the downloaded packages please run as root:
 
-$ rpm -Fvh my-ptf/*.rpm
+$ rpm -Fvh /tmp/my-ptf/*.rpm
 
 ```
 
