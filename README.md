@@ -25,7 +25,7 @@ usage: PTFload.py [-d <outputdir>] [-u <url>] [-i] [-v]
 ```
 #!/usr/bin/python
 
-from PTFload import doPtfDownload
+from suse_ptfdownload import do_ptf_download
 
 outputdir = './'
 url = ''
@@ -34,5 +34,5 @@ password = ''
 includeOptional = False
 verbose = True
 
-doPtfDownload(outputdir, url, username, password, includeOptional, verbose)
+do_ptf_download(outputdir, url, username, password, includeOptional, verbose)
 ```
