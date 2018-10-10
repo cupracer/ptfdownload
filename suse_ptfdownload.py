@@ -9,6 +9,11 @@ import re
 import base64
 import getopt
 
+def warn_root_uid():
+	if os.getuid() == 0:
+		print "WARNING! You're running this script with root permissions, which is not recommended."
+
+
 def print_welcome():
 		print ( "############################################################\n"
 				"Welcome to the Program Temporary Fix (PTF) download helper!\n"
@@ -211,6 +216,8 @@ def main():
 			ignoreOptional = True
 
 	print_welcome()
+
+	warn_root_uid()
 
 	if not check_build_key():
 		print ( "Notice:\n"
