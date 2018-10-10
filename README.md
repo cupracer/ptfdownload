@@ -1,5 +1,5 @@
 # SUSE Program Temporary Fix (PTF) download helper
-This script is intended to simplify the download of PTF packages.
+This script is intended to simplify the download of PTF packages.  
 For more information on using PTFs, please visit the following support articles:
 
 * Best practice for applying Program Temporary Fixes (PTFs)
