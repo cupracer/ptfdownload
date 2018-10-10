@@ -164,7 +164,7 @@ def print_cmd_info():
         -d: use specified download directory
         -p: PTF URL to use
         -u: SCC username
-        -i: include  optional packages (src, debuginfo, debugsource)
+        -i: include optional packages (src, debuginfo, debugsource)
         -v: verbose output
         -h: print this help"""%os.path.basename(__file__))
 
