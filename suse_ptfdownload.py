@@ -55,9 +55,17 @@ def download_package(name, url, base64auth, outputdir):
 		f.close()
 
 
+def add_slash_to_dir(dir):
+        if not dir.endswith('/'):
+                dir+= '/'
+        return dir
+
+
 def do_ptf_download_cli(outputdir, url, username, password, includeOptional, verbose):
+		outputdir = add_slash_to_dir(outputdir)
+
 		print ( "\nPlease provide necessary information:\n\n"
-				"Output	dir  : " + outputdir)
+				"Output dir   : " + outputdir)
 
 		if url == '':
 				url = raw_input("PTF URL      : ")
@@ -108,8 +116,7 @@ def do_ptf_download(outputdir, url, username, password, includeOptional, verbose
 				print "Given URL does not seem to contain links to any RPM packages."
 				return False
 
-		if not outputdir.endswith('/'):
-				outputdir+= '/'
+		outputdir = add_slash_to_dir(outputdir)
 
 		if not os.path.isdir(outputdir):
 				print 'Directory "' + outputdir + '" does not seem to exist.'
