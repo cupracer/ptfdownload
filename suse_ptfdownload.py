@@ -165,7 +165,8 @@ def print_cmd_info():
         -p: PTF URL to use
         -u: SCC username
         -i: include  optional packages (src, debuginfo, debugsource)
-        -v: verbose output"""%os.path.basename(__file__))
+        -v: verbose output
+        -h: print this help"""%os.path.basename(__file__))
 
 #####################################
 
