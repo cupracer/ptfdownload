@@ -20,7 +20,7 @@ usage: PTFload.py [-d <outputdir>] [-u <url>] [-i] [-v]
 ```
 
 ## Module
-(see test.py)
+(see [test.py](https://github.com/cupracer/suse-ptf-utils/blob/master/test.py))
 
 ```
 #!/usr/bin/python
