@@ -82,7 +82,10 @@ def doPtfDownloadCli(outputdir, url, username, password, includeOptional, verbos
 				print "No password given."
 				return False
 
-		doPtfDownload(outputdir, url, username, password, includeOptional, verbose)
+		if doPtfDownload(outputdir, url, username, password, includeOptional, verbose):
+			print ("To install the downloaded packages please run as root:\n\n"
+				"$ rpm -Fvh " + outputdir + "*.rpm\n")
+			return True
 
 
 def doPtfDownload(outputdir, url, username, password, includeOptional, verbose):
@@ -141,10 +144,7 @@ def doPtfDownload(outputdir, url, username, password, includeOptional, verbose):
 						print "\nError: " + repr(error)
 						return False
 
-		print ("\nDownloads finished.\n"
-			"To install the downloaded packages please run as root:\n\n"
-			"$ rpm -Fvh " + outputdir + "*.rpm\n")
-			
+		print "\nDownloads finished."
 		return True
 
 
