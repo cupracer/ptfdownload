@@ -9,4 +9,3 @@ password = ''
 ignoreOptional = False
 
 do_ptf_download(outputdir, url, username, password, ignoreOptional)
-
