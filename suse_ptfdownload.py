@@ -162,7 +162,7 @@ def print_cmd_info():
 		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]\n
     Optional:
         -d: use specified download directory
-        -p: PTF base URL to use
+        -p: PTF URL to use
         -u: SCC username
         -i: include  optional packages (src, debuginfo, debugsource)
         -v: verbose output"""%os.path.basename(__file__))
