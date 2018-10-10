@@ -30,7 +30,7 @@ def check_build_key():
 				return False
 
 
-def download_package(name, url, base64auth, outputdir):
+def download_item(name, url, base64auth, outputdir):
 		r = urllib2.Request(url)
 		r.add_header("Authorization", "Basic %s" % base64auth)
 		u = urllib2.urlopen(r)
@@ -99,6 +99,7 @@ def do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
 
 
 def do_ptf_download(outputdir, url, username, password, ignoreOptional):
+		hasReadme = False
 		base64auth = base64.b64encode('%s:%s' % (username, password))
 
 		try:
@@ -107,13 +108,13 @@ def do_ptf_download(outputdir, url, username, password, ignoreOptional):
 				request.add_header("Authorization", "Basic %s" % base64auth)
 				indexPage = urllib2.urlopen(request)
 				indexHtml = indexPage.read()
-				rpmLinks = re.findall(' href="(.*rpm)"', indexHtml)
+				links = re.findall(' href="(.*rpm|.*readme.txt)"', indexHtml)
 		except:
 				print "Error while accessing given URL."
 				return False
 
-		if not len(rpmLinks) > 0:
-				print "Given URL does not seem to contain links to any RPM packages."
+		if not len(links) > 0:
+				print "Given URL does not seem to contain links to any downloadable files."
 				return False
 
 		outputdir = add_slash(outputdir)
@@ -124,35 +125,40 @@ def do_ptf_download(outputdir, url, username, password, ignoreOptional):
 
 		print 'Downloading to "' + outputdir + '":\n'
 
-		for link in rpmLinks:
+		for link in links:
 				if '/' in link:
-						packageName = link.rsplit('/', 1)[-1]
+						itemName = link.rsplit('/', 1)[-1]
 				else:
-						packageName = link
+						itemName = link
 
-				packageUrl = url
+				itemUrl = url
 				if not link.startswith('/'):
-						packageUrl = add_slash(packageUrl)
-				packageUrl+= link
+						itemUrl = add_slash(itemUrl)
+				itemUrl+= link
 
 				try:
-						if ignoreOptional == True and (link.endswith('src.rpm') or 'debuginfo' in link or 'debugsource' in link):
-								print "* " + packageName + " (SKIPPED: optional)"
+						if ignoreOptional == True and (itemUrl.endswith('.src.rpm') or 'debuginfo' in link or 'debugsource' in link):
+								print "* " + itemName + " (SKIPPED: optional)"
 								continue
 						else:
-								print "* " + packageName
-								download_package(packageName, packageUrl, base64auth, outputdir)
+								print "* " + itemName
+								download_item(itemName, itemUrl, base64auth, outputdir)
 				except:
 						print "\nSomething went wrong while downloading."
 						return False
 
 				try:
-						check_downloaded_package(outputdir + packageName)
+						if itemName.endswith('.rpm'):
+							check_downloaded_package(outputdir + itemName)
+						if itemName.endswith('.txt'):
+							hasReadme = True
 				except Exception as error:
 						print "\nError: " + repr(error)
 						return False
 
 		print "\nDownloads finished."
+		if hasReadme:
+			print "Output directory contains at least one .txt file. Please read!"
 		return True
 
 

@@ -75,8 +75,11 @@ Downloading to "/tmp/my-ptf/":
     310716  [100.00%]
 * [SOME_RPM_3].rpm
     284098  [100.00%]
+* readme.txt
+       298  [100.00%]
 
 Downloads finished.
+Output directory contains at least one .txt file. Please read!
 To install the downloaded packages please run as root:
 
 $ rpm -Fvh /tmp/my-ptf/*.rpm
