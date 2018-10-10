@@ -42,18 +42,18 @@ def download_item(name, url, base64auth, outputdir):
     u = urllib2.urlopen(r)
     f = open(outputdir + name, 'wb')
     m = u.info()
-    targetFileSize = int(m.getheaders("Content-Length")[0])
-    progressFileSize = 0
+    target_file_size = int(m.getheaders("Content-Length")[0])
+    progress_file_size = 0
     block_sz = 8192
 
     while True:
-        buffer = u.read(block_sz)
-        if not buffer:
+        read_buffer = u.read(block_sz)
+        if not read_buffer:
             break
 
-        progressFileSize += len(buffer)
-        f.write(buffer)
-        status = r"%10d  [%3.2f%%]" % (progressFileSize, progressFileSize * 100. / targetFileSize)
+        progress_file_size += len(read_buffer)
+        f.write(read_buffer)
+        status = r"%10d  [%3.2f%%]" % (progress_file_size, progress_file_size * 100. / target_file_size)
         status = status + chr(8) * (len(status) + 1)
         print status
 
@@ -67,7 +67,7 @@ def add_slash(str):
     return str
 
 
-def do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
+def do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
     outputdir = add_slash(outputdir)
 
     print ("\nPlease provide necessary information:\n\n"
@@ -98,23 +98,23 @@ def do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
         print "No password given."
         return False
 
-    if do_ptf_download(outputdir, url, username, password, ignoreOptional):
+    if do_ptf_download(outputdir, url, username, password, ignore_optional):
         print ("To install the downloaded packages please run as root:\n\n"
                "$ rpm -Fvh " + outputdir + "*.rpm\n")
         return True
 
 
-def do_ptf_download(outputdir, url, username, password, ignoreOptional):
-    hasReadme = False
+def do_ptf_download(outputdir, url, username, password, ignore_optional):
+    has_readme = False
     base64auth = base64.b64encode('%s:%s' % (username, password))
 
     try:
         print "\nRetrieving PTF information..."
         request = urllib2.Request(url)
         request.add_header("Authorization", "Basic %s" % base64auth)
-        indexPage = urllib2.urlopen(request)
-        indexHtml = indexPage.read()
-        links = re.findall(' href="(.*rpm|.*readme.txt)"', indexHtml)
+        index_page = urllib2.urlopen(request)
+        index_html = index_page.read()
+        links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
     except:
         print "Error while accessing given URL."
         return False
@@ -133,45 +133,45 @@ def do_ptf_download(outputdir, url, username, password, ignoreOptional):
 
     for link in links:
         if '/' in link:
-            itemName = link.rsplit('/', 1)[-1]
+            item_name = link.rsplit('/', 1)[-1]
         else:
-            itemName = link
+            item_name = link
 
-        itemUrl = url
+        item_url = url
         if not link.startswith('/'):
-            itemUrl = add_slash(itemUrl)
-        itemUrl += link
+            item_url = add_slash(item_url)
+        item_url += link
 
         try:
-            if ignoreOptional == True and (
-                    itemUrl.endswith('.src.rpm') or 'debuginfo' in link or 'debugsource' in link):
-                print "* " + itemName + " (SKIPPED: optional)"
+            if ignore_optional == True and (
+                    item_url.endswith('.src.rpm') or 'debuginfo' in link or 'debugsource' in link):
+                print "* " + item_name + " (SKIPPED: optional)"
                 continue
             else:
-                print "* " + itemName
-                download_item(itemName, itemUrl, base64auth, outputdir)
+                print "* " + item_name
+                download_item(item_name, item_url, base64auth, outputdir)
         except:
             print "\nSomething went wrong while downloading."
             return False
 
         try:
-            if itemName.endswith('.rpm'):
-                check_downloaded_package(outputdir + itemName)
-            if itemName.endswith('.txt'):
-                hasReadme = True
+            if item_name.endswith('.rpm'):
+                check_downloaded_package(outputdir + item_name)
+            if item_name.endswith('.txt'):
+                has_readme = True
         except Exception as error:
             print "\nError: " + repr(error)
             return False
 
     print "\nDownloads finished."
-    if hasReadme:
+    if has_readme:
         print "Output directory contains at least one .txt file. Please read!"
     return True
 
 
-def check_downloaded_package(packagePath):
+def check_downloaded_package(package_path):
     devnull = open(os.devnull, 'w')
-    process = subprocess.call(['rpm', '-K', packagePath], stdout=devnull, stderr=subprocess.STDOUT)
+    process = subprocess.call(['rpm', '-K', package_path], stdout=devnull, stderr=subprocess.STDOUT)
 
     if process != 0:
         raise Exception('Signature NOT OK!')
@@ -197,7 +197,7 @@ def main():
     url = ''
     username = ''
     password = ''
-    ignoreOptional = False
+    ignore_optional = False
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h:d:p:u:i")
@@ -216,7 +216,7 @@ def main():
         elif opt == '-u':
             username = arg
         elif opt == '-i':
-            ignoreOptional = True
+            ignore_optional = True
 
     print_welcome()
 
@@ -227,7 +227,7 @@ def main():
                "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
                "It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
 
-    if not do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
+    if not do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
         print "\nAborting."
 
 
