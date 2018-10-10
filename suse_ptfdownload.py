@@ -61,10 +61,10 @@ def download_item(name, url, base64auth, outputdir):
     f.close()
 
 
-def add_slash(str):
-    if not str.endswith('/'):
-        str += '/'
-    return str
+def add_slash(str_to_edit):
+    if not str_to_edit.endswith('/'):
+        str_to_edit += '/'
+    return str_to_edit
 
 
 def do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
@@ -143,7 +143,7 @@ def do_ptf_download(outputdir, url, username, password, ignore_optional):
         item_url += link
 
         try:
-            if ignore_optional == True and (
+            if ignore_optional is True and (
                     item_url.endswith('.src.rpm') or 'debuginfo' in link or 'debugsource' in link):
                 print "* " + item_name + " (SKIPPED: optional)"
                 continue
@@ -201,22 +201,23 @@ def main():
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h:d:p:u:i")
+
+        for opt, arg in opts:
+            if opt == '-h':
+                print_cmd_info()
+                exit()
+            elif opt == '-d':
+                outputdir = arg
+            elif opt == '-p':
+                url = arg
+            elif opt == '-u':
+                username = arg
+            elif opt == '-i':
+                ignore_optional = True
+
     except getopt.GetoptError:
         print_cmd_info()
         exit(2)
-
-    for opt, arg in opts:
-        if opt == '-h':
-            print_cmd_info()
-            exit()
-        elif opt == '-d':
-            outputdir = arg
-        elif opt == '-p':
-            url = arg
-        elif opt == '-u':
-            username = arg
-        elif opt == '-i':
-            ignore_optional = True
 
     print_welcome()
 
