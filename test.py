@@ -6,6 +6,6 @@ outputdir = './'
 url = ''
 username = ''
 password = ''
-ignoreOptional = False
+ignore_optional = False
 
-do_ptf_download(outputdir, url, username, password, ignoreOptional)
+do_ptf_download(outputdir, url, username, password, ignore_optional)
