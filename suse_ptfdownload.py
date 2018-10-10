@@ -61,7 +61,7 @@ def add_slash(str):
         return str
 
 
-def do_ptf_download_cli(outputdir, url, username, password, includeOptional, verbose):
+def do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
 		outputdir = add_slash(outputdir)
 
 		print ( "\nPlease provide necessary information:\n\n"
@@ -92,13 +92,13 @@ def do_ptf_download_cli(outputdir, url, username, password, includeOptional, ver
 				print "No password given."
 				return False
 
-		if do_ptf_download(outputdir, url, username, password, includeOptional, verbose):
+		if do_ptf_download(outputdir, url, username, password, ignoreOptional):
 			print ("To install the downloaded packages please run as root:\n\n"
 				"$ rpm -Fvh " + outputdir + "*.rpm\n")
 			return True
 
 
-def do_ptf_download(outputdir, url, username, password, includeOptional, verbose):
+def do_ptf_download(outputdir, url, username, password, ignoreOptional):
 		base64auth = base64.b64encode('%s:%s' % (username, password))
 
 		try:
@@ -136,9 +136,8 @@ def do_ptf_download(outputdir, url, username, password, includeOptional, verbose
 				packageUrl+= link
 
 				try:
-						if includeOptional == False and (link.endswith('src.rpm') or 'debuginfo' in link or 'debugsource' in link):
-								if verbose == True:
-										print "* " + packageName + " (SKIPPED: optional, see help)"
+						if ignoreOptional == True and (link.endswith('src.rpm') or 'debuginfo' in link or 'debugsource' in link):
+								print "* " + packageName + " (SKIPPED: optional)"
 								continue
 						else:
 								print "* " + packageName
@@ -166,7 +165,7 @@ def check_downloaded_package(packagePath):
 
 
 def print_cmd_info():
-		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]
+		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i]
 
     Recommended:
         -d: use specified download directory
@@ -174,8 +173,7 @@ def print_cmd_info():
     Optional:
         -p: PTF URL to use
         -u: SCC username
-        -i: include optional packages (src, debuginfo, debugsource)
-        -v: verbose output
+        -i: ignore optional packages (src, debuginfo, debugsource)
         -h: print this help"""%os.path.basename(__file__))
 
 #####################################
@@ -185,11 +183,10 @@ def main():
 	url = ''
 	username = ''
 	password = ''
-	includeOptional = False
-	verbose = False
+	ignoreOptional = False
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:],"h:d:p:u:i:v")
+		opts, args = getopt.getopt(sys.argv[1:],"h:d:p:u:i")
 	except getopt.GetoptError:
 		print_cmd_info()
 		exit(2)
@@ -205,9 +202,7 @@ def main():
 		elif opt == '-u':
 			username = arg
 		elif opt == '-i':
-			includeOptional = True
-		elif opt == '-v':
-			verbose = True
+			ignoreOptional = True
 
 	print_welcome()
 
@@ -216,7 +211,7 @@ def main():
 			"Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
 			"It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
 
-	if not do_ptf_download_cli(outputdir, url, username, password, includeOptional, verbose):
+	if not do_ptf_download_cli(outputdir, url, username, password, ignoreOptional):
 		print "\nAborting."
 
 

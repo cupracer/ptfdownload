@@ -11,7 +11,7 @@ For more information on using PTFs, please visit the following support articles:
 ## Command-line interface
 ```
 $ ./suse_ptfdownload.py -h
-usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]
+usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i]
 
     Recommended:
         -d: use specified download directory
@@ -19,8 +19,7 @@ usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]
     Optional:
         -p: PTF URL to use
         -u: SCC username
-        -i: include optional packages (src, debuginfo, debugsource)
-        -v: verbose output
+        -i: ignore optional packages (src, debuginfo, debugsource)
         -h: print this help
 ```
 
@@ -36,10 +35,9 @@ outputdir = './'
 url = ''
 username = ''
 password = ''
-includeOptional = False
-verbose = True
+ignoreOptional = False
 
-do_ptf_download(outputdir, url, username, password, includeOptional, verbose)
+do_ptf_download(outputdir, url, username, password, ignoreOptional)
 ```
 
 ## Example CLI session
