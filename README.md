@@ -59,8 +59,8 @@ For more information on using PTFs, please visit the following support articles:
 
 Please provide necessary information:
 
-Output  dir  : my-ptf
-PTF URL       : [*REMOVED*]
+Output dir   : my-ptf/
+PTF URL      : [*REMOVED*]
 SCC username : [*REMOVED*]
 SCC password :
 
