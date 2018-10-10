@@ -57,12 +57,12 @@ def downloadPackage(name, url, base64auth, outputdir):
 
 def doPtfDownloadCli(outputdir, url, username, password, includeOptional, verbose):
 		print ( "\nPlease provide necessary information:\n\n"
-				"Output	   : " + outputdir)
+				"Output	dir  : " + outputdir)
 
 		if url == '':
-				url = raw_input("PTF URL	  : ")
+				url = raw_input("PTF URL       : ")
 		else:
-				print "PTF URL	  : " + url
+				print "PTF URL	     : " + url
 
 		if not url:
 				print "No URL given."
@@ -70,6 +70,8 @@ def doPtfDownloadCli(outputdir, url, username, password, includeOptional, verbos
 
 		if username == '':
 			username = raw_input("SCC username : ")
+		else:
+				print "SCC username : " + username
 
 		if not username:
 				print "No username given."
@@ -157,11 +159,13 @@ def checkDownloadedPackage(packagePath):
 
 
 def printCmdInfo():
-		print ("""usage: %s [-d <outputdir>] [-u <url>] [-i] [-v]\n
-		-d: use specified download directory
-		-u: PTF base URL to use
-		-i: include  optional packages (src, debuginfo, debugsource)
-		-v: verbose output"""%os.path.basename(__file__))
+		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]\n
+    Optional:
+        -d: use specified download directory
+        -p: PTF base URL to use
+        -u: SCC username
+        -i: include  optional packages (src, debuginfo, debugsource)
+        -v: verbose output"""%os.path.basename(__file__))
 
 #####################################
 
@@ -174,7 +178,7 @@ def main():
 	verbose = False
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:],"hd:u:i:v")
+		opts, args = getopt.getopt(sys.argv[1:],"h:d:p:u:i:v")
 	except getopt.GetoptError:
 		printCmdInfo()
 		exit(2)
@@ -185,8 +189,10 @@ def main():
 			exit()
 		elif opt == '-d':
 			outputdir = arg
-		elif opt == '-u':
+		elif opt == '-p':
 			url = arg
+		elif opt == '-u':
+			username = arg
 		elif opt == '-i':
 			includeOptional = True
 		elif opt == '-v':
