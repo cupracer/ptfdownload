@@ -166,9 +166,12 @@ def check_downloaded_package(packagePath):
 
 
 def print_cmd_info():
-		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]\n
-    Optional:
+		print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]
+
+    Recommended:
         -d: use specified download directory
+
+    Optional:
         -p: PTF URL to use
         -u: SCC username
         -i: include optional packages (src, debuginfo, debugsource)
