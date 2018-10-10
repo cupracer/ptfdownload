@@ -13,8 +13,10 @@ For more information on using PTFs, please visit the following support articles:
 $ ./suse_ptfdownload.py -h
 usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i] [-v]
 
-    Optional:
+    Recommended:
         -d: use specified download directory
+
+    Optional:
         -p: PTF URL to use
         -u: SCC username
         -i: include optional packages (src, debuginfo, debugsource)
