@@ -2,10 +2,10 @@
 This script is intended to simplify the download of PTF packages.  
 For more information on using PTFs, please visit the following support articles:
 
-* Best practice for applying Program Temporary Fixes (PTFs)
+* Best practice for applying Program Temporary Fixes (PTFs)  
   https://www.suse.com/support/kb/doc/?id=7016640
   
-* SLES 12: How to import suse_key for signed PTF packages
+* SLES 12: How to import suse_key for signed PTF packages  
   https://www.suse.com/support/kb/doc/?id=7016511
 
 ## Command-line interface
