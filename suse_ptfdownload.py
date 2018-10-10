@@ -107,17 +107,26 @@ def do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
 def do_ptf_download(outputdir, url, username, password, ignore_optional):
     has_readme = False
     base64auth = base64.b64encode('%s:%s' % (username, password))
+    is_single_download = False
 
-    try:
-        print "\nRetrieving PTF information..."
-        request = urllib2.Request(url)
-        request.add_header("Authorization", "Basic %s" % base64auth)
-        index_page = urllib2.urlopen(request)
-        index_html = index_page.read()
-        links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
-    except:
-        print "Error while accessing given URL."
-        return False
+    if url.endswith('.rpm'):
+        is_single_download = True
+	base_url, filename = os.path.split(url)
+
+        # force-fake final paths:
+        url = base_url
+	links = [filename]
+    else:
+        try:
+            print "\nRetrieving PTF information..."
+            request = urllib2.Request(url)
+            request.add_header("Authorization", "Basic %s" % base64auth)
+            index_page = urllib2.urlopen(request)
+            index_html = index_page.read()
+            links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
+        except:
+            print "Error while accessing given URL."
+            return False
 
     if not len(links) > 0:
         print "Given URL does not seem to contain links to any downloadable files."
@@ -143,7 +152,7 @@ def do_ptf_download(outputdir, url, username, password, ignore_optional):
         item_url += link
 
         try:
-            if ignore_optional is True and (
+            if ignore_optional is True and is_single_download is False and (
                     item_url.endswith('.src.rpm') or 'debuginfo' in link or 'debugsource' in link):
                 print "* " + item_name + " (SKIPPED: optional)"
                 continue
