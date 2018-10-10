@@ -10,9 +10,9 @@ import base64
 import getopt
 
 def print_welcome():
-		print ( "###########################################################\n"
-				"Welcome to the SUSE Program Temporary Fix download helper!\n"
-				"###########################################################\n\n"
+		print ( "############################################################\n"
+				"Welcome to the Program Temporary Fix (PTF) download helper!\n"
+				"############################################################\n\n"
 				"This script is intended to simplify the download of PTF packages.\n"
 				"For more information on using PTFs, please visit the following support articles:\n\n"
 				"* Best practice for applying Program Temporary Fixes (PTFs)\n"
@@ -60,9 +60,9 @@ def do_ptf_download_cli(outputdir, url, username, password, includeOptional, ver
 				"Output	dir  : " + outputdir)
 
 		if url == '':
-				url = raw_input("PTF URL       : ")
+				url = raw_input("PTF URL      : ")
 		else:
-				print "PTF URL	     : " + url
+				print "PTF URL      : " + url
 
 		if not url:
 				print "No URL given."
