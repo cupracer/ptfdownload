@@ -49,7 +49,13 @@ def check_build_key():
         devnull = open(os.devnull, 'w')
         subprocess.check_call(['rpm', '-V', 'suse-build-key'], stdout=devnull, stderr=subprocess.STDOUT)
         return True
+    except OSError:
+        print "Verification of RPM packages is not available on this system."
+        return False
     except Exception:
+        print ("Notice:\n"
+               "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
+               "It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
         return False
 
 
@@ -249,10 +255,7 @@ def main():
 
     warn_root_uid()
 
-    if not check_build_key():
-        print ("Notice:\n"
-               "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
-               "It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
+    check_build_key()
 
     if not do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
         print "\nAborting."
