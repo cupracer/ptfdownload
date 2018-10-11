@@ -2,10 +2,10 @@
 
 from suse_ptfdownload import do_ptf_download
 
-outputdir = './'
+output_directory = './'
 url = ''
 username = ''
 password = ''
 ignore_optional = False
 
-do_ptf_download(outputdir, url, username, password, ignore_optional)
+do_ptf_download(output_directory, url, username, password, ignore_optional)

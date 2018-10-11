@@ -11,7 +11,7 @@ For more information on using PTFs, please visit the following support articles:
 ## Command-line interface
 ```
 $ ./suse_ptfdownload.py -h
-usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i]
+usage: suse_ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 
     Recommended:
         -d: use specified download directory
@@ -31,13 +31,13 @@ usage: suse_ptfdownload.py [-d <outputdir>] [-p <url>] [-u <username>] [-i]
 
 from suse_ptfdownload import do_ptf_download
 
-outputdir = './'
+output_directory = './'
 url = ''
 username = ''
 password = ''
-ignoreOptional = False
+ignore_optional = False
 
-do_ptf_download(outputdir, url, username, password, ignoreOptional)
+do_ptf_download(output_directory, url, username, password, ignore_optional)
 ```
 
 ## Example CLI session

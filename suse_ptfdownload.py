@@ -36,11 +36,11 @@ def check_build_key():
         return False
 
 
-def download_item(name, url, base64auth, outputdir):
+def download_item(name, url, base64auth, output_directory):
     r = urllib2.Request(url)
     r.add_header("Authorization", "Basic %s" % base64auth)
     u = urllib2.urlopen(r)
-    f = open(outputdir + name, 'wb')
+    f = open(output_directory + name, 'wb')
     m = u.info()
     target_file_size = int(m.getheaders("Content-Length")[0])
     progress_file_size = 0
@@ -67,11 +67,11 @@ def add_slash(str_to_edit):
     return str_to_edit
 
 
-def do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
-    outputdir = add_slash(outputdir)
+def do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
+    output_directory = add_slash(output_directory)
 
     print ("\nPlease provide necessary information:\n\n"
-           "Output dir   : " + outputdir)
+           "Output dir   : " + output_directory)
 
     if url == '':
         url = raw_input("PTF URL      : ")
@@ -98,24 +98,24 @@ def do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
         print "No password given."
         return False
 
-    if do_ptf_download(outputdir, url, username, password, ignore_optional):
+    if do_ptf_download(output_directory, url, username, password, ignore_optional):
         print ("To install the downloaded packages please run as root:\n\n"
-               "$ rpm -Fvh " + outputdir + "*.rpm\n")
+               "$ rpm -Fvh " + output_directory + "*.rpm\n")
         return True
 
 
-def do_ptf_download(outputdir, url, username, password, ignore_optional):
+def do_ptf_download(output_directory, url, username, password, ignore_optional):
     has_readme = False
     base64auth = base64.b64encode('%s:%s' % (username, password))
     is_single_download = False
 
     if url.endswith('.rpm'):
         is_single_download = True
-	base_url, filename = os.path.split(url)
+        base_url, filename = os.path.split(url)
 
         # force-fake final paths:
         url = base_url
-	links = [filename]
+        links = [filename]
     else:
         try:
             print "\nRetrieving PTF information..."
@@ -132,13 +132,13 @@ def do_ptf_download(outputdir, url, username, password, ignore_optional):
         print "Given URL does not seem to contain links to any downloadable files."
         return False
 
-    outputdir = add_slash(outputdir)
+    output_directory = add_slash(output_directory)
 
-    if not os.path.isdir(outputdir):
-        print 'Directory "' + outputdir + '" does not seem to exist.'
+    if not os.path.isdir(output_directory):
+        print 'Directory "' + output_directory + '" does not seem to exist.'
         return False
 
-    print 'Downloading to "' + outputdir + '":\n'
+    print 'Downloading to "' + output_directory + '":\n'
 
     for link in links:
         if '/' in link:
@@ -158,14 +158,14 @@ def do_ptf_download(outputdir, url, username, password, ignore_optional):
                 continue
             else:
                 print "* " + item_name
-                download_item(item_name, item_url, base64auth, outputdir)
+                download_item(item_name, item_url, base64auth, output_directory)
         except:
             print "\nSomething went wrong while downloading."
             return False
 
         try:
             if item_name.endswith('.rpm'):
-                check_downloaded_package(outputdir + item_name)
+                check_downloaded_package(output_directory + item_name)
             if item_name.endswith('.txt'):
                 has_readme = True
         except Exception as error:
@@ -187,7 +187,7 @@ def check_downloaded_package(package_path):
 
 
 def print_cmd_info():
-    print ("""usage: %s [-d <outputdir>] [-p <url>] [-u <username>] [-i]
+    print ("""usage: %s [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 
     Recommended:
         -d: use specified download directory
@@ -202,7 +202,7 @@ def print_cmd_info():
 #####################################
 
 def main():
-    outputdir = './'
+    output_directory = './'
     url = ''
     username = ''
     password = ''
@@ -216,7 +216,7 @@ def main():
                 print_cmd_info()
                 exit()
             elif opt == '-d':
-                outputdir = arg
+                output_directory = arg
             elif opt == '-p':
                 url = arg
             elif opt == '-u':
@@ -237,7 +237,7 @@ def main():
                "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
                "It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
 
-    if not do_ptf_download_cli(outputdir, url, username, password, ignore_optional):
+    if not do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
         print "\nAborting."
 
 
