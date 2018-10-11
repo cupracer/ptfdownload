@@ -27,15 +27,23 @@ import base64
 import getopt
 
 
+def get_program_title(banner=False):
+    title = ''
+    if banner:
+        title = '############################################\n'
+    title += 'Program Temporary Fix (PTF) download helper'
+    if banner:
+        title += '\n############################################\n'
+    return title
+
+
 def warn_root_uid():
     if os.getuid() == 0:
         print "WARNING! You're running this script with root permissions, which is not recommended."
 
 
 def print_welcome():
-    print ("############################################################\n"
-           "Welcome to the Program Temporary Fix (PTF) download helper!\n"
-           "############################################################\n\n"
+    print (get_program_title(True) + "\n"
            "This script is intended to simplify the download of PTF packages.\n"
            "For more information on using PTFs, please visit the following support articles:\n\n"
            "* Best practice for applying Program Temporary Fixes (PTFs)\n"
@@ -210,16 +218,19 @@ def check_downloaded_package(package_path):
 
 
 def print_cmd_info():
+    print get_program_title() + "\n"
     print ("""usage: %s [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 
+    General:
+        -h,   --help              print this help
+        
     Recommended:
-        -d: use specified download directory
+        -d,   --directory=DIR     use specified download directory
 
     Optional:
-        -p: PTF URL to use
-        -u: SCC username
-        -i: ignore optional packages (src, debuginfo, debugsource)
-        -h: print this help""" % os.path.basename(__file__))
+        -p,   --ptf-url=URL       PTF URL to use
+        -u,   --username=USER     SCC username
+        -i,   --ignore-optional   ignore optional packages (src, debuginfo, debugsource)""" % os.path.basename(__file__))
 
 
 #####################################
@@ -232,19 +243,19 @@ def main():
     ignore_optional = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:d:p:u:i")
+        opts, args = getopt.getopt(sys.argv[1:], "hd:p:u:i", ["help", "directory=", "ptf-url=", "username=", "ignore-optional"])
 
         for opt, arg in opts:
-            if opt == '-h':
+            if opt in ('-h', '--help'):
                 print_cmd_info()
                 exit()
-            elif opt == '-d':
+            elif opt in ('-d', '--directory'):
                 output_directory = arg
-            elif opt == '-p':
+            elif opt in ('-p', '--ptf-url'):
                 url = arg
-            elif opt == '-u':
+            elif opt in ('-u', '--username'):
                 username = arg
-            elif opt == '-i':
+            elif opt in ('-i', '--ignore-optional'):
                 ignore_optional = True
 
     except getopt.GetoptError:
