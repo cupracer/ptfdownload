@@ -49,8 +49,7 @@ def check_build_key():
         devnull = open(os.devnull, 'w')
         subprocess.check_call(['rpm', '-V', 'suse-build-key'], stdout=devnull, stderr=subprocess.STDOUT)
         return True
-    except Exception as error:
-        print "Error: " + repr(error)
+    except Exception:
         return False
 
 
@@ -142,9 +141,8 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
             index_page = urllib2.urlopen(request)
             index_html = index_page.read()
             links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
-        except Exception as error:
+        except Exception:
             print "Error while accessing given URL."
-            print "Error: " + repr(error)
             return False
 
     if not len(links) > 0:
@@ -178,9 +176,8 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
             else:
                 print "* " + item_name
                 download_item(item_name, item_url, base64auth, output_directory)
-        except Exception as error:
+        except Exception:
             print "\nSomething went wrong while downloading."
-            print "Error: " + repr(error)
             return False
 
         try:
