@@ -44,7 +44,7 @@ do_ptf_download(output_directory, url, username, password, ignore_optional)
 ```
 $ mkdir /tmp/my-ptf
 
-$ ./suse_ptfdownload.py -d my-ptf
+$ ./suse_ptfdownload.py -d /tmp/my-ptf
 ######################################################
 Welcome to the Program Temporary Fix download helper!
 ######################################################
