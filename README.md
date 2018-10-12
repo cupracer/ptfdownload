@@ -10,8 +10,8 @@ For more information on using PTFs, please visit the following support articles:
 
 ## Command-line interface
 ```
-$ ./suse_ptfdownload.py -h
-usage: suse_ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-i]
+$ ./ptfdownload.py -h
+usage: ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 
     Recommended:
         -d: use specified download directory
@@ -29,7 +29,7 @@ usage: suse_ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-
 ```
 #!/usr/bin/python
 
-from suse_ptfdownload import do_ptf_download
+from ptfdownload import do_ptf_download
 
 output_directory = './'
 url = ''
@@ -44,7 +44,7 @@ do_ptf_download(output_directory, url, username, password, ignore_optional)
 ```
 $ mkdir /tmp/my-ptf
 
-$ ./suse_ptfdownload.py -d /tmp/my-ptf
+$ ./ptfdownload.py -d /tmp/my-ptf
 ######################################################
 Welcome to the Program Temporary Fix download helper!
 ######################################################
