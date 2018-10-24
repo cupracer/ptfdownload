@@ -28,12 +28,12 @@ import getopt
 
 
 def get_program_title(banner=False):
-    title = ''
+    title = 'Program Temporary Fix (PTF) download helper'
+
     if banner:
-        title = '############################################\n'
-    title += 'Program Temporary Fix (PTF) download helper'
-    if banner:
-        title += '\n############################################\n'
+        border = '############################################\n'
+        return border + title + border
+
     return title
 
 
@@ -60,10 +60,11 @@ def check_build_key():
     except OSError:
         print "Verification of RPM packages is not available on this system."
         return False
-    except Exception:
+    except Exception as e:
         print ("Notice:\n"
                "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
-               "It may be required to (re)install it before you'll be able to install any PTF packages on this system.")
+               "It may be required to (re)install it before being able to install any PTF packages on this system.\n"
+               "Raw error message:\n" + e.message)
         return False
 
 
@@ -155,8 +156,9 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
             index_page = urllib2.urlopen(request)
             index_html = index_page.read()
             links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
-        except Exception:
-            print "Error while accessing given URL."
+        except Exception as e:
+            print ("Error while accessing given URL.\n"
+                   "Raw error message:\n" + e.message)
             return False
 
     if not len(links) > 0:
@@ -190,8 +192,9 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
             else:
                 print "* " + item_name
                 download_item(item_name, item_url, base64auth, output_directory)
-        except Exception:
-            print "\nSomething went wrong while downloading."
+        except Exception as e:
+            print ("\nSomething went wrong while downloading.\n"
+                   "Raw error message:\n" + e.message)
             return False
 
         try:
@@ -230,7 +233,8 @@ def print_cmd_info():
     Optional:
         -p,   --ptf-url=URL       PTF URL to use
         -u,   --username=USER     SCC username
-        -i,   --ignore-optional   ignore optional packages (src, debuginfo, debugsource)""" % os.path.basename(__file__))
+        -i,   --ignore-optional   ignore optional packages (src, debuginfo, debugsource)"""
+           % os.path.basename(__file__))
 
 
 #####################################
@@ -243,7 +247,8 @@ def main():
     ignore_optional = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hd:p:u:i", ["help", "directory=", "ptf-url=", "username=", "ignore-optional"])
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   "hd:p:u:i", ["help", "directory=", "ptf-url=", "username=", "ignore-optional"])
 
         for opt, arg in opts:
             if opt in ('-h', '--help'):
