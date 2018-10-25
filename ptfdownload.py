@@ -32,7 +32,7 @@ def get_program_title(banner=False):
 
     if banner:
         border = '############################################\n'
-        return border + title + border
+        return border + title + "\n" + border
 
     return title
 
