@@ -70,7 +70,10 @@ def check_build_key():
 
 def download_item(name, url, base64auth, output_directory):
     r = urllib2.Request(url)
-    r.add_header("Authorization", "Basic %s" % base64auth)
+
+    if base64auth:
+        r.add_header("Authorization", "Basic %s" % base64auth)
+
     u = urllib2.urlopen(r)
     f = open(output_directory + name, 'wb')
     m = u.info()
@@ -99,7 +102,7 @@ def add_slash(str_to_edit):
     return str_to_edit
 
 
-def do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
+def do_download_cli(output_directory, url, username, password, ignore_optional, ignore_signature):
     print ("\nPlease provide necessary information:\n\n")
 
     if output_directory == '':
@@ -114,39 +117,43 @@ def do_ptf_download_cli(output_directory, url, username, password, ignore_option
     output_directory = add_slash(output_directory)
 
     if url == '':
-        url = raw_input("PTF URL      : ")
+        url = raw_input("URL          : ")
     else:
-        print "PTF URL      : " + url
+        print "URL          : " + url
 
     if not url:
         print "No URL given."
         return False
 
     if username == '':
-        username = raw_input("SCC username : ")
+        username = raw_input("Username     : ")
     else:
-        print "SCC username : " + username
+        print "Username     : " + username
 
-    if not username:
-        print "No username given."
-        return False
+    # if not username:
+    #     print "No username given."
+    #     return False
 
     if password == '':
-        password = getpass.getpass("SCC password : ")
+        password = getpass.getpass("Password     : ")
 
-    if not password:
-        print "No password given."
-        return False
+    # if not password:
+    #     print "No password given."
+    #     return False
 
-    if do_ptf_download(output_directory, url, username, password, ignore_optional):
+    if do_download(output_directory, url, username, password, ignore_optional, ignore_signature):
         print ("To install the downloaded packages please run (as root):\n\n"
                "$ rpm -Fvh " + output_directory + "*.rpm\n")
         return True
 
 
-def do_ptf_download(output_directory, url, username, password, ignore_optional):
+def do_download(output_directory, url, username, password, ignore_optional, ignore_signature):
     has_readme = False
-    base64auth = base64.b64encode('%s:%s' % (username, password))
+    base64auth = ''
+
+    if username and password:
+        base64auth = base64.b64encode('%s:%s' % (username, password))
+
     is_single_download = False
 
     if url.endswith('.rpm'):
@@ -157,9 +164,12 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
         links = [filename]
     else:
         try:
-            print "\nRetrieving PTF information..."
+            print "\nRetrieving information..."
             request = urllib2.Request(url)
-            request.add_header("Authorization", "Basic %s" % base64auth)
+
+            if base64auth:
+                request.add_header("Authorization", "Basic %s" % base64auth)
+
             index_page = urllib2.urlopen(request)
             index_html = index_page.read()
             links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
@@ -205,7 +215,7 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
             return False
 
         try:
-            if item_name.endswith('.rpm'):
+            if ignore_signature and item_name.endswith('.rpm'):
                 check_downloaded_package(output_directory + item_name)
             if item_name.endswith('.txt'):
                 has_readme = True
@@ -229,7 +239,7 @@ def check_downloaded_package(package_path):
 
 def print_cmd_info():
     print get_program_title() + "\n"
-    print ("""usage: %s [-d <output_directory>] [-p <url>] [-u <username>] [-i]
+    print ("""usage: %s [-d <output_directory>] [-p <url>] [-u <username>] [-i] [-s]
 
     General:
         -h,   --help              print this help
@@ -238,9 +248,10 @@ def print_cmd_info():
         -d,   --directory=DIR     use specified download directory
 
     Optional:
-        -p,   --ptf-url=URL       PTF URL to use
-        -u,   --username=USER     SCC username
-        -i,   --ignore-optional   ignore optional packages (src, debuginfo, debugsource)"""
+        -p,   --ptf-url=URL       URL to use
+        -u,   --username=USER     username for authentication
+        -i,   --ignore-optional   ignore optional packages (src, debuginfo, debugsource)
+        -s,   --ignore-signature  ignore signature errors"""
            % os.path.basename(__file__))
 
 
@@ -252,10 +263,12 @@ def main():
     username = ''
     password = ''
     ignore_optional = False
+    ignore_signature = False
 
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "hd:p:u:i", ["help", "directory=", "ptf-url=", "username=", "ignore-optional"])
+                                   "hd:p:u:is", ["help", "directory=", "ptf-url=", "username=",
+                                                 "ignore-optional", "ignore-signature"])
 
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -269,6 +282,8 @@ def main():
                 username = arg
             elif opt in ('-i', '--ignore-optional'):
                 ignore_optional = True
+            elif opt in ('-s', '--ignore-signature'):
+                ignore_signature = True
 
     except getopt.GetoptError:
         print_cmd_info()
@@ -280,7 +295,7 @@ def main():
 
     check_build_key()
 
-    if not do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
+    if not do_download_cli(output_directory, url, username, password, ignore_optional, ignore_signature):
         print "\nAborting."
 
 
