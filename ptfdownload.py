@@ -102,8 +102,16 @@ def add_slash(str_to_edit):
 def do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
     output_directory = add_slash(output_directory)
 
-    print ("\nPlease provide necessary information:\n\n"
-           "Output dir   : " + output_directory)
+    print ("\nPlease provide necessary information:\n\n")
+
+    if output_directory == '':
+        output_directory = raw_input("Output dir   : ")
+    else:
+        print "Output dir   : " + output_directory
+
+    if not output_directory:
+        print "No output directory given."
+        return False
 
     if url == '':
         url = raw_input("PTF URL      : ")
@@ -131,7 +139,7 @@ def do_ptf_download_cli(output_directory, url, username, password, ignore_option
         return False
 
     if do_ptf_download(output_directory, url, username, password, ignore_optional):
-        print ("To install the downloaded packages please run as root:\n\n"
+        print ("To install the downloaded packages please run (as root):\n\n"
                "$ rpm -Fvh " + output_directory + "*.rpm\n")
         return True
 
@@ -142,10 +150,9 @@ def do_ptf_download(output_directory, url, username, password, ignore_optional):
     is_single_download = False
 
     if url.endswith('.rpm'):
+        # force-fake final paths for single rpm download:
         is_single_download = True
         base_url, filename = os.path.split(url)
-
-        # force-fake final paths:
         url = base_url
         links = [filename]
     else:
@@ -240,7 +247,7 @@ def print_cmd_info():
 #####################################
 
 def main():
-    output_directory = './'
+    output_directory = ''
     url = ''
     username = ''
     password = ''
