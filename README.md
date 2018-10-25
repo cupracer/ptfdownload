@@ -13,14 +13,11 @@ For more information on using PTFs, please visit the following support articles:
 $ ./ptfdownload.py -h
 usage: ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 
-    Recommended:
-        -d: use specified download directory
-
-    Optional:
-        -p: PTF URL to use
-        -u: SCC username
-        -i: ignore optional packages (src, debuginfo, debugsource)
-        -h: print this help
+    -d: use specified download directory
+    -p: PTF URL to use
+    -u: SCC username
+    -i: ignore optional packages (src, debuginfo, debugsource)
+    -h: print this help
 ```
 
 ## Module
@@ -32,9 +29,9 @@ usage: ptfdownload.py [-d <output_directory>] [-p <url>] [-u <username>] [-i]
 from ptfdownload import do_ptf_download
 
 output_directory = './'
-url = ''
-username = ''
-password = ''
+url = 'https://...'
+username = 'foo'
+password = 'secret'
 ignore_optional = False
 
 do_ptf_download(output_directory, url, username, password, ignore_optional)
