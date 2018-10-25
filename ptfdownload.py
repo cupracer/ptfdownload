@@ -29,10 +29,9 @@ import getopt
 
 def get_program_title(banner=False):
     title = 'Program Temporary Fix (PTF) download helper'
-
+    border = chr(35) * (len(title) + 1) + '\n'
     if banner:
-        border = '############################################\n'
-        return border + title + "\n" + border
+        return border + title + '\n' + border
 
     return title
 
