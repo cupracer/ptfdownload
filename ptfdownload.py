@@ -141,10 +141,7 @@ def do_download_cli(output_directory, url, username, password, ignore_optional, 
     #     print "No password given."
     #     return False
 
-    if do_download(output_directory, url, username, password, ignore_optional, ignore_signature):
-        print ("To install the downloaded packages please run (as root):\n\n"
-               "$ rpm -Fvh " + output_directory + "*.rpm\n")
-        return True
+    return do_download(output_directory, url, username, password, ignore_optional, ignore_signature)
 
 
 def do_download(output_directory, url, username, password, ignore_optional, ignore_signature):
