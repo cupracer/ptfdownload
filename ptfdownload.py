@@ -63,8 +63,8 @@ def check_build_key():
     except Exception as e:
         print ("Notice:\n"
                "Something seems to be wrong with the \"suse-build-key\" RPM package.\n"
-               "It may be required to (re)install it before being able to install any PTF packages on this system.\n"
-               "Raw error message: " + str(e))
+               "It may be required to (re)install it before being able to install any PTF packages on this system.\n\n"
+               + str(e))
         return False
 
 
@@ -171,8 +171,7 @@ def do_download(output_directory, url, username, password, ignore_optional, igno
             index_html = index_page.read()
             links = re.findall(' href="(.*rpm|.*readme.txt)"', index_html)
         except Exception as e:
-            print ("Error while accessing given URL.\n"
-                   "Raw error message: " + str(e))
+            print ("Error while accessing given URL: " + str(e))
             return False
 
     if not len(links) > 0:
@@ -207,8 +206,7 @@ def do_download(output_directory, url, username, password, ignore_optional, igno
                 print "* " + item_name
                 download_item(item_name, item_url, base64auth, output_directory)
         except Exception as e:
-            print ("\nSomething went wrong while downloading.\n"
-                   "Raw error message: " + str(e))
+            print ("\nSomething went wrong while downloading: " + str(e))
             return False
 
         try:
