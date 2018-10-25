@@ -19,7 +19,7 @@
 
 from ptfdownload import do_ptf_download
 
-output_directory = './'
+output_directory = ''
 url = ''
 username = ''
 password = ''
