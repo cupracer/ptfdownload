@@ -100,8 +100,6 @@ def add_slash(str_to_edit):
 
 
 def do_ptf_download_cli(output_directory, url, username, password, ignore_optional):
-    output_directory = add_slash(output_directory)
-
     print ("\nPlease provide necessary information:\n\n")
 
     if output_directory == '':
@@ -112,6 +110,8 @@ def do_ptf_download_cli(output_directory, url, username, password, ignore_option
     if not output_directory:
         print "No output directory given."
         return False
+
+    output_directory = add_slash(output_directory)
 
     if url == '':
         url = raw_input("PTF URL      : ")
