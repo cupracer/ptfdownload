@@ -2,7 +2,7 @@
 
 # Copyright (c) 2018 Thomas Schulte.  All rights reserved.
 #
-# This file is part of ptfdownload.
+# This file is part of cupracer/ptfdownload.
 #
 # ptfdownload is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published by
