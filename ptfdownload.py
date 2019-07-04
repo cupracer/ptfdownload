@@ -224,7 +224,7 @@ def check_downloaded_package(package_path):
     process = subprocess.call(['rpm', '-K', package_path], stdout=devnull, stderr=subprocess.STDOUT)
 
     if process != 0:
-        raise Exception('Signature NOT OK!')
+        raise Exception('Signature not OK! Did you import the suse_ptf_key.asc as explained here? https://www.suse.com/support/kb/doc/?id=7016511')
 
 
 def print_cmd_info():
